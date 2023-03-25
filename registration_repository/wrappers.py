@@ -15,6 +15,14 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     async def create_patient(patient: PatientsCreate, context: RegisterServiceContext = Depends(context_)):
         return context.create_patient(patient=patient)
 
+    @router.get('/get_patients')
+    async def get_patients(context: RegisterServiceContext = Depends(context_)):
+        return context.get_patients()
+
+    @router.get('/get_patient')
+    async def get_patient(id: int, context: RegisterServiceContext = Depends(context_)):
+        return context.get_patient(id=id)
+
     @router.post('/create_treatmentteeth')
     async def create_treatmentteeth(patient_id: int, attached_id: int,
                                     context: RegisterServiceContext = Depends(context_)):
