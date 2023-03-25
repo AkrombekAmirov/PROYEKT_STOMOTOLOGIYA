@@ -32,12 +32,18 @@ class RegisterServiceContext:
     def create_patient(self, patient):
         return self.register_service.patient_repository.create_petient(petient=patient, created_by=self.register.id)
 
+    def get_patients(self):
+        return self.register_service.patient_repository.get_petients()
+
+    def get_patient(self, id: int):
+        return self.register_service.patient_repository.get_petient(id=id)
+
     def create_treatmentteeth(self, patient_id: int, attached_id: int):
-        if self.register_service.patient_repository.get_treatment(patient_id=patient_id,
-                                                                  date_of_treatment=datetime.now().strftime(
-                                                                      "%Y-%m-%d")):
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                                detail="treatment conflict: bir kunga bitta ochish mumkin!")
+        # if self.register_service.patient_repository.get_treatment(patient_id=patient_id,
+        #                                                           date_of_treatment=datetime.now().strftime(
+        #                                                               "%Y-%m-%d")):
+        #     raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+        #                         detail="treatment conflict: bir kunga bitta ochish mumkin!")
         return self.register_service.patient_repository.create_treatmentteeth(patient_id=patient_id,
                                                                               attached_id=attached_id,
                                                                               created_by=self.register.id)
@@ -51,7 +57,8 @@ class RegisterServiceContext:
         return self.register_service.patient_repository.get_treatments(patient_id=patient_id)
 
     def create_dental_complaints(self, complaint_name, price):
-        return self.register_service.patient_repository.create_dental_complaints(complaint_name=complaint_name, price=price)
+        return self.register_service.patient_repository.create_dental_complaints(complaint_name=complaint_name,
+                                                                                 price=price)
 
     def treatment_records(self, treatment_id: int, treatments):
         for treatment in treatments:

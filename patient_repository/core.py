@@ -17,6 +17,18 @@ class PatientRepository:
         session.close()
         return Patients.from_orm(result)
 
+    def get_petients(self):
+        session = Session(bind=self.engine)
+        result = session.query(Patients).all()
+        session.close()
+        return result
+
+    def get_petient(self, id: int):
+        session = Session(bind=self.engine)
+        result = session.query(Patients).filter_by(id=id).first()
+        session.close()
+        return Patients.from_orm(result)
+
     def create_treatmentteeth(self, **kwargs):
         session = Session(bind=self.engine)
         result = TreatmentTeeth(**kwargs)
