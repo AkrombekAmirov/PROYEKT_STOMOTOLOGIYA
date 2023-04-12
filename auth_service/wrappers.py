@@ -19,17 +19,17 @@ def AuthServiceRouter(auth_service: AuthService):
     async def expire_token(token=Header(...)):
         return auth_service.expire_token(token)
 
-    @router.post("/admin/login")
-    async def admin_login(credentials: Credentials, token=Header(...)):
-        return auth_service.login_admin(token, credentials)
+    @router.post("/login")
+    async def login(credentials: Credentials, token=Header(...)):
+        return auth_service._login(token, credentials)
 
-    @router.post("/register/login")
-    async def register_login(credentials: Credentials, token=Header(...)):
-        return auth_service.login_register(token, credentials)
-
-    @router.post("/doctor/login")
-    async def doctor_login(credentials: Credentials, token=Header(...)):
-        return auth_service.login_doctor(token, credentials)
+    # @router.post("/register/login")
+    # async def register_login(credentials: Credentials, token=Header(...)):
+    #     return auth_service.login_register(token, credentials)
+    #
+    # @router.post("/doctor/login")
+    # async def doctor_login(credentials: Credentials, token=Header(...)):
+    #     return auth_service.login_doctor(token, credentials)
 
     @router.get("/user/logout")
     async def user_logout(token=Header(...)):
