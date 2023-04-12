@@ -8,11 +8,11 @@ step 3 sudo apt-get update
 
 step 4 sudo apt-get install postgresql-client
 
-step 5 psql -h localhost -U admin_user -d symptomatologic
+step 5 CMD RUN python -m main.migrate migrate 
 
-step 6 INSERT INTO "user" (role, first_name, last_name, username, password, address, phone_number, created_date)
+step 6 psql -h localhost -U admin_user -d symptomatologic
+
+step 7 INSERT INTO "user" (role, first_name, last_name, username, password, address, phone_number, created_date)
 VALUES ('admin', 'TestUser', 'User', 'username', 'mypassword', 'New York', '+1234567890', NOW());
-
-step 7 CMD RUN python -m main.migrate migrate 
 
 step 8 CMD RUN python -m uvicorn main:app --reload
