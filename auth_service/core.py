@@ -28,21 +28,21 @@ class AuthService:
         if not self.exists_token(token): raise Exception("Token does not login")
         return self.token_cache.expire(token)
 
-    def _login(self, token, credentials, role):
+    def _login(self, token, credentials):
         user = self.user_repository.get_one_filtered(**credentials.dict())
         if not user: raise Exception("user not found")
-        if user.role != role: raise Exception(f"you are not {role}")
+        # if user.role != role: raise Exception(f"you are not {role}")
         self.token_cache.set(token, user.id)
         return user.dict()
 
-    def login_admin(self, token, credentials) -> bool:
-        return self._login(token, credentials, "admin")
-
-    def login_register(self, token, credentials) -> bool:
-        return self._login(token, credentials, "register")
-
-    def login_doctor(self, token, credentials):
-        return self._login(token, credentials, "doctor")
+    # def login_admin(self, token, credentials) -> bool:
+    #     return self._login(token, credentials, "admin")
+    #
+    # def login_register(self, token, credentials) -> bool:
+    #     return self._login(token, credentials, "register")
+    #
+    # def login_doctor(self, token, credentials):
+    #     return self._login(token, credentials, "doctor")
 
     def logout(self, token):
         if not self.exists_token(token): raise Exception("Token does not exist")
