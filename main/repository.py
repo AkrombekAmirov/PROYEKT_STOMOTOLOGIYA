@@ -10,4 +10,4 @@ from .config import (
 
 user_repository = UserRepository(engine=engine)
 patient_repository = PatientRepository(engine=engine)
-token_cache = RedisKeyValueCache()
+token_cache = RedisKeyValueCache(TOKEN_CACHE_URL)

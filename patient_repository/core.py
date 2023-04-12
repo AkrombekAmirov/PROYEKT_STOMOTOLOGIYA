@@ -1,6 +1,10 @@
+from sqlalchemy.sql import func
+from fastapi import HTTPException, status
 from sqlalchemy.orm.session import Session
 from .models import Patients, TreatmentRecords, TreatmentTeeth, TreatmentHistory, DentalComplaints, Treatments, \
-    Fillings, CleaningAgents, Extractions
+    Fillings, CleaningAgents, Extractions, QueuePatient
+
+queue = 1
 
 
 class PatientRepository:
@@ -93,10 +97,14 @@ class PatientRepository:
 
     def create_obj(self, table_name: str, **kwargs):
         session = Session(bind=self.engine)
-        if table_name == 'Treatments': table_name = Treatments
-        if table_name == 'Fillings': table_name = Fillings
-        if table_name == 'CleaningAgents': table_name = CleaningAgents
-        if table_name == 'Extractions': table_name = Extractions
+        if table_name == 'Treatments':
+            table_name = Treatments
+        if table_name == 'Fillings':
+            table_name = Fillings
+        if table_name == 'CleaningAgents':
+            table_name = CleaningAgents
+        if table_name == 'Extractions':
+            table_name = Extractions
         result = table_name(**kwargs)
         session.add(result)
         session.commit()
@@ -110,3 +118,19 @@ class PatientRepository:
         session.commit()
         session.refresh(result)
         return TreatmentHistory.from_orm(result)
+
+    def create_queue(self, patient_id: int):
+        session = Session(bind=self.engine)
+        max_queue_number = session.query(func.max(QueuePatient.queue_number)).scalar()
+        if session.query(QueuePatient).filter_by(patient_id=patient_id).first():
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Patient queue conflict")
+        session.add(QueuePatient(patient_id=patient_id,
+                                 queue_number=max_queue_number + 1 if max_queue_number is not None else 1))
+        session.commit()
+        return max_queue_number + 1 if max_queue_number is not None else 1
+
+    def get_queue(self):
+        session = Session(bind=self.engine)
+        result = session.query(QueuePatient).all()
+        session.close()
+        return result
