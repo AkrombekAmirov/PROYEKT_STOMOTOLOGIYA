@@ -66,4 +66,12 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     async def create_create_cleaning_agents(name: str, price: str, context: RegisterServiceContext = Depends(context_)):
         return context.create_obj(table_name='Extractions', name=name, price=price)
 
+    @router.post('/create_queue')
+    async def create_queue(patient_id: int, context: RegisterServiceContext = Depends(context_)):
+        return context.create_queue(patient_id=patient_id)
+
+    @router.get('/get_queue')
+    async def get_queue(context: RegisterServiceContext = Depends(context_)):
+        return context.get_queue()
+
     return router

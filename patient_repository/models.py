@@ -67,3 +67,9 @@ class TreatmentHistory(SQLModel, table=True):
     extraction_id: str = Field(ForeignKey("extractions.id"))
     created_by: int = Field(nullable=True)
     date_of_creation: str = Field(default=datetime.now().strftime("%Y-%m-%d"))
+
+
+class QueuePatient(SQLModel, table=True):
+    id: int = Field(primary_key=True, index=True)
+    queue_number: int = Field(default=0)
+    patient_id: int = Field(nullable=True)
