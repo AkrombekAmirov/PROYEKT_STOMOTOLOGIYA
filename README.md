@@ -7,8 +7,12 @@ step 2 create docker images postgresql CMD RUN "docker run -e POSTGRES_PASSWORD=
 step 3 CMD RUN python -m main.migrate migrate 
 
 step 4 CMD RUN python -m uvicorn main:app --reload
+
 step 5 sudo apt-get update
+
 step 6 sudo apt-get install postgresql-client
+
 step 7 psql -h localhost -U admin_user -d symptomatologic
+
 step 8 INSERT INTO "user" (role, first_name, last_name, username, password, address, phone_number, created_date)
 VALUES ('admin', 'TestUser', 'User', 'username', 'mypassword', 'New York', '+1234567890', NOW());
