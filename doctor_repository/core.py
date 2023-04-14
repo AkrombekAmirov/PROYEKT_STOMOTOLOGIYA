@@ -1,6 +1,6 @@
+from registration_repository.models import TreatmentHistory
 from patient_repository import PatientRepository
 from user_repository import UserRepository
-from .models import CreateTreatmentHistory
 from fastapi import HTTPException, status
 from auth_service import AuthService
 from datetime import datetime
@@ -30,22 +30,21 @@ class DoktorServiceContext:
         self.doktor_service = doktor_service
         self.doktor = doktor
 
-    def create_history(self, history: CreateTreatmentHistory):
-        self.doktor_service.patient_repository.create_history(treatment_record_id=history.treatment_record_id,
-                                                              created_by=self.doktor.id,
-                                                              treatment_id=history.treatment_id,
-                                                              filling_id=history.filling_id,
-                                                              cleaning_agent_id=history.cleaning_agent_id,
-                                                              extraction_id=history.extraction_id)
+    def create_history(self, treatment_history: TreatmentHistory):
+        self.doktor_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth,
+                                                              tooth_id=treatment_history.tooth_id,
+                                                              complaint_id=treatment_history.complaint_id,
+                                                              treatment_id=treatment_history.treatment_id,
+                                                              filling_id=treatment_history.filling_id,
+                                                              cleaning_agent_id=treatment_history.cleaning_agent_id,
+                                                              extraction_id=treatment_history.extraction_id,
+                                                              created_by=self.doktor.id)
 
     def get_treatment(self):
-        self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id,
-                                                              date_of_treatment=datetime.now().strftime("%Y-%m-%d"))
+        return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 
     def get_treatments(self):
-        self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
+        return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 
     def update_treatment_teeth_one(self, id: int, price: str):
         return self.doktor_service.patient_repository.update_TreatmentTeeth(id=id, price=price)
-
-    # def get_treatment_records(self, treatmentteeth: int):

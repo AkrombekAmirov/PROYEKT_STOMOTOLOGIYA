@@ -18,7 +18,7 @@ class DentalComplaints(SQLModel, table=True):
     price: str
 
 
-class TreatmentTeeth(SQLModel, table=True):  # kasallik ochish
+class TreatmentTeeth(SQLModel, table=True):  # kasallik kartasini ochish
     id: int = Field(primary_key=True, index=True)
     created_by: int = Field(nullable=True)
     patient_id: int = Field(ForeignKey("patients.id"), index=True)
@@ -27,11 +27,11 @@ class TreatmentTeeth(SQLModel, table=True):  # kasallik ochish
     price: str = Field(default='0')
 
 
-class TreatmentRecords(SQLModel, table=True):  # shikoyatlari misol uchun tish yuqligi
-    id: int = Field(primary_key=True, index=True)
-    treatmentteeth: int
-    complaint_id: str = Field(ForeignKey("dental_complaints.id"), index=True)
-    tooth_id: int = Field(ForeignKey("teeth.id"), index=True)
+# class TreatmentRecords(SQLModel, table=True):  # shikoyatlari misol uchun tish yuqligi
+#     id: int = Field(primary_key=True, index=True)
+#     treatmentteeth: int
+#     complaint_id: str = Field(ForeignKey("dental_complaints.id"), index=True)
+#     tooth_id: int = Field(ForeignKey("teeth.id"), index=True)
 
 
 class Treatments(SQLModel, table=True):  # plomba
@@ -60,12 +60,14 @@ class Extractions(SQLModel, table=True):  # protezlar
 
 class TreatmentHistory(SQLModel, table=True):
     id: int = Field(primary_key=True, index=True)
-    treatment_record_id: int = Field(ForeignKey("treatment_records.id"), index=True)
-    treatment_id: str = Field(ForeignKey("treatments.id"), index=True)
-    filling_id: str = Field(ForeignKey("fillings.id"))
-    cleaning_agent_id: str = Field(ForeignKey("cleaning_agents.id"))
-    extraction_id: str = Field(ForeignKey("extractions.id"))
-    created_by: int = Field(nullable=True)
+    treatmentteeth: int
+    tooth_id: int
+    complaint_id: str
+    treatment_id: str = Field(default=None)
+    filling_id: str = Field(default=None)
+    cleaning_agent_id: str = Field(default=None)
+    extraction_id: str = Field(default=None)
+    created_by: int
     date_of_creation: str = Field(default=datetime.now().strftime("%Y-%m-%d"))
 
 

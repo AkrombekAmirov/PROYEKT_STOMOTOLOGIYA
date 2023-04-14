@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from patient_repository import PatientRepository
 from user_repository import UserRepository
+from .models import TreatmentHistory
 from auth_service import AuthService
 from datetime import datetime
 
@@ -56,21 +57,26 @@ class RegisterServiceContext:
     def get_treatments(self, patient_id):
         return self.register_service.patient_repository.get_treatments(patient_id=patient_id)
 
-    def create_dental_complaints(self, complaint_name, price):
-        return self.register_service.patient_repository.create_dental_complaints(complaint_name=complaint_name,
-                                                                                 price=price)
+    # def create_dental_complaints(self, complaint_name, price):
+    #     return self.register_service.patient_repository.create_dental_complaints(complaint_name=complaint_name,
+    #                                                                              price=price)
 
-    def treatment_records(self, treatment_id: int, treatments):
-        for treatment in treatments:
-            self.register_service.patient_repository.TreatmentRecords(treatmentteeth=treatment_id,
-                                                                      complaint_id=treatment.complaint_id,
-                                                                      tooth_id=treatment.tooth_id, notes='salom')
+    # def treatment_records(self, treatment_id: int, treatments):
+    #     for treatment in treatments:
+    #         self.register_service.patient_repository.TreatmentRecords(treatmentteeth=treatment_id,
+    #                                                                   complaint_id=treatment.complaint_id,
+    #                                                                   tooth_id=treatment.tooth_id, notes='salom')
 
-    def get_treatment_records(self, treatment_id: int):
-        return self.register_service.patient_repository.get_treatment_records(treatmentteeth=treatment_id)
+    # def get_treatment_records(self, treatment_id: int):
+    #     return self.register_service.patient_repository.get_treatment_records(treatmentteeth=treatment_id)
 
-    def create_obj(self, table_name: str, name: str, price: str):
-        return self.register_service.patient_repository.create_obj(table_name=table_name, name=name, price=price)
+    def create_history(self, treatment_history: TreatmentHistory):
+        return self.register_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth, tooth_id=treatment_history.tooth_id, complaint_id=treatment_history.complaint_id,
+                                                                       treatment_id=treatment_history.treatment_id, filling_id=treatment_history.filling_id, cleaning_agent_id=treatment_history.cleaning_agent_id,
+                                                                       extraction_id=treatment_history.extraction_id, created_by=self.register.id)
+
+    def create_obj(self, create_obj):
+        return self.register_service.patient_repository.create_obj(create_obj=create_obj)
 
     def create_queue(self, patient_id: int):
         return self.register_service.patient_repository.create_queue(patient_id=patient_id)

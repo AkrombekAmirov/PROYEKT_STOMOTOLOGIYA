@@ -1,8 +1,10 @@
 from pydantic import BaseModel
 
 
-class CreateTreatmentHistory(BaseModel):
-    treatment_record_id: int
+class TreatmentHistory(BaseModel):
+    treatmentteeth: int
+    tooth_id: int
+    complaint_id: str
     treatment_id: str
     filling_id: str
     cleaning_agent_id: str
