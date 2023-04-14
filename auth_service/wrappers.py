@@ -5,7 +5,7 @@ from .core import AuthService
 
 
 def AuthServiceRouter(auth_service: AuthService):
-    router = APIRouter()
+    router = APIRouter(prefix='/auth')
 
     @router.get("/token/generate")
     async def generate_token():

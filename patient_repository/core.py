@@ -1,7 +1,7 @@
 from sqlalchemy.sql import func
 from fastapi import HTTPException, status
 from sqlalchemy.orm.session import Session
-from .models import Patients, TreatmentRecords, TreatmentTeeth, TreatmentHistory, DentalComplaints, Treatments, \
+from .models import Patients, TreatmentTeeth, TreatmentHistory, DentalComplaints, Treatments, \
     Fillings, CleaningAgents, Extractions, QueuePatient
 
 queue = 1
@@ -58,7 +58,7 @@ class PatientRepository:
         session = Session(bind=self.engine)
         result = session.query(TreatmentTeeth).filter_by(**kwargs).all()
         session.close()
-        return TreatmentTeeth.from_orm(result).id
+        return result
 
     def update_TreatmentTeeth(self, id: int, **kwargs):
         session = Session(bind=self.engine)
@@ -68,14 +68,14 @@ class PatientRepository:
         session.close()
         return True
 
-    def TreatmentRecords(self, **kwargs):
-        session = Session(bind=self.engine)
-        result = TreatmentRecords(**kwargs)
-        session.add(result)
-        session.commit()
-        session.refresh(result)
-        session.close()
-        return TreatmentRecords.from_orm(result)
+    # def TreatmentRecords(self, **kwargs):
+    #     session = Session(bind=self.engine)
+    #     result = TreatmentRecords(**kwargs)
+    #     session.add(result)
+    #     session.commit()
+    #     session.refresh(result)
+    #     session.close()
+    #     return TreatmentRecords.from_orm(result)
 
     def create_dental_complaints(self, **kwargs):
         session = Session(bind=self.engine)
@@ -86,26 +86,23 @@ class PatientRepository:
         session.close()
         return DentalComplaints.from_orm(result)
 
-    def get_treatment_records(self, **kwargs):
-        session = Session(bind=self.engine)
-        results = session.query(TreatmentRecords).filter_by(**kwargs).all()
-        for result in results:
-            result.complaint_id = session.query(DentalComplaints).filter_by(
-                id=result.complaint_id).first().complaint_name
-        session.close()
-        return results
+    # def get_treatment_records(self, **kwargs):
+    #     session = Session(bind=self.engine)
+    #     results = session.query(TreatmentRecords).filter_by(**kwargs).all()
+    #     for result in results:
+    #         result.complaint_id = session.query(DentalComplaints).filter_by(
+    #             id=result.complaint_id).first().complaint_name
+    #     session.close()
+    #     return results
 
-    def create_obj(self, table_name: str, **kwargs):
+    def create_obj(self, create_obj):
         session = Session(bind=self.engine)
-        if table_name == 'Treatments':
-            table_name = Treatments
-        if table_name == 'Fillings':
-            table_name = Fillings
-        if table_name == 'CleaningAgents':
-            table_name = CleaningAgents
-        if table_name == 'Extractions':
-            table_name = Extractions
-        result = table_name(**kwargs)
+        if create_obj.table_name == 'Treatments': table_name = Treatments
+        if create_obj.table_name == 'Fillings': table_name = Fillings
+        if create_obj.table_name == 'CleaningAgents': table_name = CleaningAgents
+        if create_obj.table_name == 'Extractions': table_name = Extractions
+        if create_obj.table_name == 'DentalComplaints': table_name = DentalComplaints
+        result = table_name(name=create_obj.name, price=create_obj.price)
         session.add(result)
         session.commit()
         session.refresh(result)

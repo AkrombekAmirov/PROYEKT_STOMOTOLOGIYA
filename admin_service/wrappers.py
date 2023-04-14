@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 
 def AuthorizedAdminServiceRouter(authorized_admin_service: AuthorizedAdminService):
-    router = APIRouter()
+    router = APIRouter(prefix='/admin')
 
     async def context_(token=Header(...)):
         return authorized_admin_service.context(token)

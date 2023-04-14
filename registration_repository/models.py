@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Dict
 
 
 class PatientsCreate(BaseModel):
@@ -9,8 +8,16 @@ class PatientsCreate(BaseModel):
     phone_number: str
 
 
-# class TreatmentRecords(BaseModel):
-#     records: List[Dict[int, int]]
-class TreatmentRecords(BaseModel):
-    complaint_id: int
+class TreatmentHistory(BaseModel):
+    treatmentteeth: int
     tooth_id: int
+    complaint_id: str
+    treatment_id: str
+    filling_id: str
+    cleaning_agent_id: str
+    extraction_id: str
+
+class Create_Object(BaseModel):
+    table_name: str
+    name: str
+    price: str
