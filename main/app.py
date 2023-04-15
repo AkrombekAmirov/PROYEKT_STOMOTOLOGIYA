@@ -1,6 +1,7 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from .repository import user_repository
 from traceback import print_stack
 from .routers import router
 from fastapi import FastAPI
@@ -20,6 +21,11 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+def create_user():
+    user_repository.create_test_user()
 
 
 @app.exception_handler(Exception)

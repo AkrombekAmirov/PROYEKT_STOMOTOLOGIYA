@@ -6,6 +6,18 @@ class UserRepository:
     def __init__(self, engine):
         self.engine = engine
 
+    def create_test_user(self):
+        session = Session(bind=self.engine)
+        if session.query(User).filter_by(username="testadmin").first():
+            return session.close()
+        else:
+            result = User(role="admin", first_name="Test", last_name="Admin", username="testadmin", password="password",
+                          address="Test Address", phone_number="123456789")
+            session.add(result)
+            session.commit()
+            session.refresh(result)
+            session.close()
+
     def create_user(self, user: User):
         session = Session(bind=self.engine)
         user_ = User(**user.dict(exclude={'id'}))

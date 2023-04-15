@@ -116,18 +116,54 @@ class PatientRepository:
         session.refresh(result)
         return TreatmentHistory.from_orm(result)
 
-    def create_queue(self, patient_id: int):
+    def gets_history(self, **kwargs):
+        session = Session(bind=self.engine)
+        result = session.query(TreatmentHistory).filter_by(**kwargs).all()
+        session.close()
+        return TreatmentHistory.from_orm(result)
+
+    def get_history(self, id):
+        session = Session(bind=self.engine)
+        result = session.query(TreatmentHistory).filter_by(id=id).first()
+        session.close()
+        return TreatmentHistory.from_orm(result)
+
+    def update_history(self, id: int, **kwargs):
+        session = Session(bind=self.engine)
+        for key, value in kwargs.items():
+            setattr(session.query(TreatmentHistory).filter_by(id=id).first(), key, value)
+        session.commit()
+        session.close()
+        return True
+
+    def create_queue(self, patient_id: int, doctor_id: int):
         session = Session(bind=self.engine)
         max_queue_number = session.query(func.max(QueuePatient.queue_number)).scalar()
         if session.query(QueuePatient).filter_by(patient_id=patient_id).first():
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Patient queue conflict")
-        session.add(QueuePatient(patient_id=patient_id,
+        session.add(QueuePatient(patient_id=patient_id, doctor_id=doctor_id,
                                  queue_number=max_queue_number + 1 if max_queue_number is not None else 1))
         session.commit()
         return max_queue_number + 1 if max_queue_number is not None else 1
 
-    def get_queue(self):
+    def get_queue(self, doctor_id: int):
         session = Session(bind=self.engine)
-        result = session.query(QueuePatient).all()
+        results = session.query(QueuePatient).filter_by(doctor_id=doctor_id).all()
+        for result in results:
+            result.patient_id = session.query(Patients).filter_by(id=result.patient_id).first()
         session.close()
-        return result
+        return results
+
+    def remove_queue(self, id):
+        session = Session(bind=self.engine)
+        session.query(QueuePatient).filter_by(id=id).delete()
+        session.commit()
+        session.close()
+        return True
+
+    def clear_queue(self):
+        session = Session(bind=self.engine)
+        session.query(QueuePatient).delete()
+        session.commit()
+        session.close()
+        return True

@@ -78,8 +78,8 @@ class RegisterServiceContext:
     def create_obj(self, create_obj):
         return self.register_service.patient_repository.create_obj(create_obj=create_obj)
 
-    def create_queue(self, patient_id: int):
-        return self.register_service.patient_repository.create_queue(patient_id=patient_id)
+    def create_queue(self, patient_id: int, doctor_id: int):
+        return self.register_service.patient_repository.create_queue(patient_id=patient_id, doctor_id=doctor_id)
 
-    def get_queue(self):
-        return self.register_service.patient_repository.get_queue()
+    def get_queue(self, doctor_id: int):
+        return self.register_service.patient_repository.get_queue(doctor_id=doctor_id)
