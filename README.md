@@ -10,3 +10,4 @@ step 3 ./run.sh
 Test username = username
 Test password = mypassword
 Test role = admin
+
