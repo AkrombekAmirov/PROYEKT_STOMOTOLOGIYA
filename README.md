@@ -7,7 +7,7 @@ step 2 ./setup.sh
 
 step 3 ./run.sh
 
-Test username = username
-Test password = mypassword
+Test username = testadmin
+Test password = password
 Test role = admin
 
