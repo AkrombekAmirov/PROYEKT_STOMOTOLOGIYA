@@ -11,3 +11,6 @@ Test username = testadmin
 Test password = password
 Test role = admin
 
+valid for windows 
+python -m main.migrate migrate
+python -m uvicorn main:app --reload
