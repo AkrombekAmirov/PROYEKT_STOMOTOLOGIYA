@@ -2,11 +2,13 @@ import argparse
 from .config import engine
 import user_repository.migrate as sqlmodel
 import patient_repository.migrate as patient_migrate
+import file_repository.migrate as file_migrate
 
 
 modules = (
     'sqlmodel',
-    'patient_migrate'
+    'patient_migrate',
+    'file_migrate'
 )
 
 

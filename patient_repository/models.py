@@ -25,13 +25,8 @@ class TreatmentTeeth(SQLModel, table=True):  # kasallik kartasini ochish
     attached_id: int = Field(nullable=True)
     date_of_treatment: str = Field(default=datetime.now().strftime("%Y-%m-%d"))
     price: str = Field(default='0')
-
-
-# class TreatmentRecords(SQLModel, table=True):  # shikoyatlari misol uchun tish yuqligi
-#     id: int = Field(primary_key=True, index=True)
-#     treatmentteeth: int
-#     complaint_id: str = Field(ForeignKey("dental_complaints.id"), index=True)
-#     tooth_id: int = Field(ForeignKey("teeth.id"), index=True)
+    description: str = Field(default=None)
+    doctor_description: str = Field(default=None)
 
 
 class Treatments(SQLModel, table=True):  # plomba

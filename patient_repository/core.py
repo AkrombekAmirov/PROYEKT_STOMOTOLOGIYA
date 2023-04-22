@@ -68,15 +68,6 @@ class PatientRepository:
         session.close()
         return True
 
-    # def TreatmentRecords(self, **kwargs):
-    #     session = Session(bind=self.engine)
-    #     result = TreatmentRecords(**kwargs)
-    #     session.add(result)
-    #     session.commit()
-    #     session.refresh(result)
-    #     session.close()
-    #     return TreatmentRecords.from_orm(result)
-
     def create_dental_complaints(self, **kwargs):
         session = Session(bind=self.engine)
         result = DentalComplaints(**kwargs)
@@ -85,15 +76,6 @@ class PatientRepository:
         session.refresh(result)
         session.close()
         return DentalComplaints.from_orm(result)
-
-    # def get_treatment_records(self, **kwargs):
-    #     session = Session(bind=self.engine)
-    #     results = session.query(TreatmentRecords).filter_by(**kwargs).all()
-    #     for result in results:
-    #         result.complaint_id = session.query(DentalComplaints).filter_by(
-    #             id=result.complaint_id).first().complaint_name
-    #     session.close()
-    #     return results
 
     def create_obj(self, create_obj):
         session = Session(bind=self.engine)

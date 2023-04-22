@@ -20,7 +20,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
         return response
 
 
-app = FastAPI()
+app = FastAPI(docs_url='/')
 
 
 @app.on_event("startup")
