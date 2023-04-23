@@ -87,6 +87,9 @@ class RegisterServiceContext:
     def get_files(self, patient_id: int):
         return self.register_service.file_repository.get_files(patient_id=patient_id)
 
+    def get_doctors(self):
+        return self.register_service.user_repository.get_doctors(role="doctor")
+
     def create_obj(self, create_obj):
         return self.register_service.patient_repository.create_obj(create_obj=create_obj)
 

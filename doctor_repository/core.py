@@ -12,7 +12,7 @@ class DoktorService:
         self.user_repository = user_repository
 
     def context(self, doktor):
-        if doktor.role != 'doktor': raise Exception('incorrect role')
+        if doktor.role != 'doctor': raise Exception('incorrect role')
         return DoktorServiceContext(self, doktor=doktor)
 
 
