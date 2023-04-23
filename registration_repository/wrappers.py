@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Body, UploadFile, HTTPException, status
 from .core import AuthorizedRegisterService, RegisterServiceContext
 from .models import PatientsCreate, TreatmentHistory, Create_Object
-from fastapi.responses import StreamingResponse
 from fastapi.params import Header, Depends
 from typing import List, Optional
 from gzip import compress
 
-FILE_SIZE = 524288
+FILE_SIZE = 5242880
 CHUNK_SIZE = 262144
 
 
@@ -54,23 +53,22 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     @router.post('/create_file')
     async def create_file(patient_id: int, images: List[UploadFile],
                           context: RegisterServiceContext = Depends(context_)):
-        data = []
         zipped_files = []
         for image in images:
-            bfr = await image.read()
-            zipped_file = compress(bfr)
-            zipped_files.append((zipped_file, image.content_type))
-            if len(zipped_file) > FILE_SIZE:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                    detail=f"image size should be less than {FILE_SIZE // 10224}kb!")
-        for image in zipped_files:
-            image = context.create_file(patient_id=patient_id, image=image[0], content_type=image[1])
-            data.append(image)
-        return {"data": data}
+            zipped_files.append((compress(await image.read()), image.content_type))
+            if len(compress(await image.read())) > FILE_SIZE: raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"image size should be less than {FILE_SIZE // 10224}kb!")
+        return {"data": [context.create_file(patient_id=patient_id, image=image[0], content_type=image[1]) for image in
+                         zipped_files]}
 
-    # @router.get('/get_file')
-    # async def get_file(file_uuid: str = Body(...), context: RegisterServiceContext = Depends(context_)):
-    #     return context.get_file(file_uuid)
+    @router.get('/get_file')
+    async def get_file(file_uuid: str, context: RegisterServiceContext = Depends(context_)):
+        return context.get_file(file_uuid)
+
+    @router.get('/get_files')
+    async def get_files(patient_id: int, context: RegisterServiceContext = Depends(context_)):
+        return context.get_files(patient_id=patient_id)
 
     @router.post('/create_queue')
     async def create_queue(patient_id: int, doctor_id: int, context: RegisterServiceContext = Depends(context_)):

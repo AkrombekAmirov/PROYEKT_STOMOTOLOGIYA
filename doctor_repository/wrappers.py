@@ -20,7 +20,8 @@ def AuthorizedDoktorServiceRouter(authorized_doktor_service: AuthorizedDoktorSer
     async def get_treatment(context: DoktorServiceContext = Depends(context_)):
         return context.get_treatment()
 
-    # @router.get('/get_treatments')
-    # async def get_treatments()
+    @router.get('/get_treatment_day')
+    async def get_treatment_(patient_id: int, context: DoktorServiceContext = Depends(context_)):
+        return context.get_treatment_(patient_id=patient_id)
 
     return router

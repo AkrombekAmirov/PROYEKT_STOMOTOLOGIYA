@@ -43,6 +43,9 @@ class DoktorServiceContext:
     def get_treatment(self):
         return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 
+    def get_treatment_(self, patient_id: int):
+        return self.doktor_service.patient_repository.get_treatment(patient_id=patient_id, date_of_treatment=datetime.now().strftime("%Y-%m-%d"))
+
     def get_treatments(self):
         return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 

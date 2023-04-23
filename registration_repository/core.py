@@ -1,17 +1,20 @@
-from fastapi import HTTPException, status
 from patient_repository import PatientRepository
+from fastapi.responses import StreamingResponse
 from user_repository import UserRepository
+from file_repository import FileService
 from .models import TreatmentHistory
 from auth_service import AuthService
-from file_repository import FileService
 from datetime import datetime
+from gzip import decompress
 from uuid import uuid4
 
 
 class RegisterService:
-    def __init__(self, patient_repository: PatientRepository, user_repository: UserRepository):
+    def __init__(self, patient_repository: PatientRepository, user_repository: UserRepository,
+                 file_repository: FileService):
         self.patient_repository = patient_repository
         self.user_repository = user_repository
+        self.file_repository = file_repository
 
     def context(self, register):
         if register.role != "register": raise Exception("incorrect role")
@@ -72,10 +75,17 @@ class RegisterServiceContext:
 
     def create_file(self, patient_id: int, image: bytes, content_type: str):
         uuid = str(uuid4())
-        print(uuid)
-        # self.register_service.file_repository.create_file_chunk(image=image, file_uuid=uuid)
-        # return self.register_service.file_repository.create_file(patient_id=patient_id, content_type=content_type,
-        #                                                          file_id=uuid)
+        self.register_service.file_repository.create_file_chunk(image=image, file_uuid=uuid)
+        return self.register_service.file_repository.create_file(patient_id=patient_id, content_type=content_type,
+                                                                 file_id=uuid)
+
+    def get_file(self, file_uuid: str):
+        def iterfile():
+            yield decompress(b"".join([element.chunk for element in self.register_service.file_repository.get_file(file_id=file_uuid)]))
+        return StreamingResponse(iterfile(), media_type=self.register_service.file_repository.get_file_(file_uuid=file_uuid).content_type)
+
+    def get_files(self, patient_id: int):
+        return self.register_service.file_repository.get_files(patient_id=patient_id)
 
     def create_obj(self, create_obj):
         return self.register_service.patient_repository.create_obj(create_obj=create_obj)
