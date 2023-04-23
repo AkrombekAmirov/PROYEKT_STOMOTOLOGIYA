@@ -36,7 +36,7 @@ async def exception_handler(request, exc):
 app.add_middleware(ExceptionMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost", "http://localhost:8000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

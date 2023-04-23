@@ -45,6 +45,12 @@ class UserRepository:
         if not user: return
         return User.from_orm(user)
 
+    def get_doctors(self, **kwargs):
+        session = Session(bind=self.engine)
+        result = [User.from_orm(user) for user in session.query(User).filter_by(**kwargs).all()]
+        session.close()
+        return result
+
     def delete_user(self, user_id):
         session = Session(bind=self.engine)
         session.query(User).filter_by(id=user_id).delete()

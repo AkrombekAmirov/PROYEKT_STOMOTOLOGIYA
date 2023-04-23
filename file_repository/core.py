@@ -2,7 +2,7 @@ from .models import FileChunk, FileRepository
 from sqlalchemy.orm.session import Session
 
 chunk_size = 262144
-FILE_SIZE = 524288
+FILE_SIZE = 5242880
 
 
 class FileService:
@@ -27,14 +27,26 @@ class FileService:
             if not bfr:
                 done_reading = True
                 break
-            bfr = bytearray(bfr)
-            result = FileChunk(file_id=file_uuid, chunk=bfr)
+            result = FileChunk(file_id=file_uuid, chunk=bytearray(bfr))
             session.add(result)
             session.commit()
             session.refresh(result)
             current_chunk += 1
 
-    # def get_file(self, file_id: str):
-    #     session = Session(bind=self.engine)
-    #     result = session.query()
+    def get_file_(self, file_uuid: str):
+        session = Session(bind=self.engine)
+        result = session.query(FileRepository).filter_by(file_id=file_uuid).first()
+        session.close()
+        return FileRepository.from_orm(result)
 
+    def get_files(self, patient_id: int):
+        session = Session(bind=self.engine)
+        result = session.query(FileRepository).filter_by(patient_id=patient_id).all()
+        session.close()
+        return result
+
+    def get_file(self, file_id: str):
+        session = Session(bind=self.engine)
+        result = session.query(FileChunk).filter_by(file_id=file_id).all()
+        session.close()
+        return result
