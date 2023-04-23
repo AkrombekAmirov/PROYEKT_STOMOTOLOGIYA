@@ -31,7 +31,7 @@ class AuthService:
         if not self.token_manager.decrypt(token=token): raise Exception("Token does not login")
         return self.token_manager.expire(token=token)
 
-    def _login(self, token, credentials):
+    def _login(self, credentials):
         user = self.user_repository.get_one_filtered(**credentials.dict())
         if not user: raise Exception("user not found")
         return user.dict(), self.token_manager.encrypt(data={"sub": user.id})
