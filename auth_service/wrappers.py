@@ -7,9 +7,9 @@ from .core import AuthService
 def AuthServiceRouter(auth_service: AuthService):
     router = APIRouter(prefix='/auth')
 
-    @router.get("/token/generate")
-    async def generate_token():
-        return auth_service.generate_token()
+    # @router.get("/token/generate")
+    # async def generate_token():
+    #     return auth_service.generate_token()
 
     @router.get("/token/exists")
     async def exists_token(token=Header(...)):
@@ -20,16 +20,8 @@ def AuthServiceRouter(auth_service: AuthService):
         return auth_service.expire_token(token)
 
     @router.post("/login")
-    async def login(credentials: Credentials, token=Header(...)):
-        return auth_service._login(token, credentials)
-
-    # @router.post("/register/login")
-    # async def register_login(credentials: Credentials, token=Header(...)):
-    #     return auth_service.login_register(token, credentials)
-    #
-    # @router.post("/doctor/login")
-    # async def doctor_login(credentials: Credentials, token=Header(...)):
-    #     return auth_service.login_doctor(token, credentials)
+    async def login(credentials: Credentials):
+        return auth_service._login(credentials)
 
     @router.get("/user/logout")
     async def user_logout(token=Header(...)):
