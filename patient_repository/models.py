@@ -1,5 +1,7 @@
-from sqlmodel import SQLModel, Field, ForeignKey
+from sqlmodel import SQLModel, Field, ForeignKey, ARRAY, Integer, Column
+from sqlalchemy.dialects import postgresql
 from datetime import datetime
+from typing import List
 
 
 class Patients(SQLModel, table=True):
@@ -56,7 +58,7 @@ class Extractions(SQLModel, table=True):  # protezlar
 class TreatmentHistory(SQLModel, table=True):
     id: int = Field(primary_key=True, index=True)
     treatmentteeth: int
-    tooth_id: int
+    tooth_id: List[int] = Field(sa_column=Column(postgresql.ARRAY(Integer)))
     complaint_id: str
     treatment_id: str = Field(default=None)
     filling_id: str = Field(default=None)
