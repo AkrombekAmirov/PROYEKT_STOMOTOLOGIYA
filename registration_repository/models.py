@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class PatientsCreate(BaseModel):
@@ -10,7 +11,7 @@ class PatientsCreate(BaseModel):
 
 class TreatmentHistory(BaseModel):
     treatmentteeth: int
-    tooth_id: int
+    tooth_id: List[int] = []
     complaint_id: str
     treatment_id: str
     filling_id: str

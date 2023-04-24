@@ -64,6 +64,7 @@ class RegisterServiceContext:
         return self.register_service.patient_repository.get_treatments(patient_id=patient_id)
 
     def create_history(self, treatment_history: TreatmentHistory):
+        print(treatment_history.tooth_id[0])
         return self.register_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth,
                                                                        tooth_id=treatment_history.tooth_id,
                                                                        complaint_id=treatment_history.complaint_id,
