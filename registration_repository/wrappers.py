@@ -50,6 +50,10 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     async def create_obj(create_obj: Create_Object, context: RegisterServiceContext = Depends(context_)):
         return context.create_obj(create_obj)
 
+    @router.get('/get_dentalComplaints')
+    async def get_dentalComplaints(context: RegisterServiceContext = Depends(context_)):
+        return context.get_objs(table_name='DentalComplaints')
+
     @router.post('/create_file', description="bemor uchun file yuklash ")
     async def create_file(patient_id: int, images: List[UploadFile],
                           context: RegisterServiceContext = Depends(context_)):

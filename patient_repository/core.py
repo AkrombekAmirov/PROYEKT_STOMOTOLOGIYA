@@ -90,6 +90,13 @@ class PatientRepository:
         session.refresh(result)
         return result
 
+    def get_objs(self, table_name: str):
+        session = Session(bind=self.engine)
+        if table_name == 'DentalComplaints': table_name = DentalComplaints
+        results = [result for result in session.query(table_name).all()]
+        session.close()
+        return results
+
     def create_history(self, **kwargs):
         session = Session(bind=self.engine)
         result = TreatmentHistory(**kwargs)
