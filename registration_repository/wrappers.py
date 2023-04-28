@@ -27,7 +27,8 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     async def get_patient(id: int, context: RegisterServiceContext = Depends(context_)):
         return context.get_patient(id=id)
 
-    @router.post('/create_treatmentteeth', description='bugungi kun uchun karta ochish (bugun uchun bitta ochishi lozim ikkita bulsa conflict bulib qoladi)')
+    @router.post('/create_treatmentteeth',
+                 description='bugungi kun uchun karta ochish (bugun uchun bitta ochishi lozim ikkita bulsa conflict bulib qoladi)')
     async def create_treatmentteeth(patient_id: int, attached_id: int, description: Optional[str] = None,
                                     context: RegisterServiceContext = Depends(context_)):
         return context.create_treatmentteeth(patient_id=patient_id, attached_id=attached_id, description=description)
@@ -43,10 +44,11 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     @router.post('/create_history', description='Bemorga kasallik tashxislarini yozish')
     async def create_history(treatment_history: List[TreatmentHistory],
                              context: RegisterServiceContext = Depends(context_)):
-        for treatment_history_ in treatment_history:
-            context.create_history(treatment_history=treatment_history_)
+        return [context.create_history(treatment_history=treatment_history_) for treatment_history_ in
+                treatment_history]
 
-    @router.post('/create_obj', description="[Fillings, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")
+    @router.post('/create_obj',
+                 description="[Fillings, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")
     async def create_obj(create_obj: Create_Object, context: RegisterServiceContext = Depends(context_)):
         return context.create_obj(create_obj)
 

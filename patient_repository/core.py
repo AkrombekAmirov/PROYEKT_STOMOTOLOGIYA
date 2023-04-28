@@ -78,6 +78,7 @@ class PatientRepository:
         return DentalComplaints.from_orm(result)
 
     def create_obj(self, create_obj):
+        global table_name
         session = Session(bind=self.engine)
         if create_obj.table_name == 'Treatments': table_name = Treatments
         if create_obj.table_name == 'Fillings': table_name = Fillings
