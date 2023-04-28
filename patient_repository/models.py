@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, ForeignKey, ARRAY, Integer, Column
+from sqlmodel import SQLModel, Field, ForeignKey, ARRAY, Integer, Column, String
 from sqlalchemy.dialects import postgresql
 from datetime import datetime
 from typing import List
@@ -12,12 +12,6 @@ class Patients(SQLModel, table=True):
     address: str
     phone_number: str
     date_of_creation: datetime = Field(default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-
-class DentalComplaints(SQLModel, table=True):
-    id: int = Field(primary_key=True, index=True)  # koreyc pulpit periodantint tishsizlik
-    complaint_name: str
-    price: str
 
 
 class TreatmentTeeth(SQLModel, table=True):  # kasallik kartasini ochish
@@ -55,11 +49,17 @@ class Extractions(SQLModel, table=True):  # protezlar
     price: str
 
 
+class DentalComplaints(SQLModel, table=True):
+    id: int = Field(primary_key=True, index=True)  # koreyc pulpit periodantint tishsizlik
+    name: str
+    price: str
+
+
 class TreatmentHistory(SQLModel, table=True):
     id: int = Field(primary_key=True, index=True)
     treatmentteeth: int
     tooth_id: List[int] = Field(sa_column=Column(postgresql.ARRAY(Integer)))
-    complaint_id: str
+    complaint_id: List[str] = Field(sa_column=Column(postgresql.ARRAY(String)))
     treatment_id: str = Field(default=None)
     filling_id: str = Field(default=None)
     cleaning_agent_id: str = Field(default=None)
