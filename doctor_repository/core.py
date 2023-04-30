@@ -40,8 +40,11 @@ class DoktorServiceContext:
                                                               extraction_id=treatment_history.extraction_id,
                                                               created_by=self.doktor.id)
 
-    def get_treatment(self):
-        return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
+    def get_history(self, treatmentteeth_id: int):
+        return self.doktor_service.patient_repository.gets_history(treatmentteeth=treatmentteeth_id)
+
+    def get_treatment(self, patient_id: int):
+        return self.doktor_service.patient_repository.get_treatment_(patient_id=patient_id)
 
     def get_treatment_(self, patient_id: int):
         return self.doktor_service.patient_repository.get_treatment(patient_id=patient_id, date_of_treatment=datetime.now().strftime("%Y-%m-%d"))
@@ -51,3 +54,12 @@ class DoktorServiceContext:
 
     def update_treatment_teeth_one(self, id: int, price: str):
         return self.doktor_service.patient_repository.update_TreatmentTeeth(id=id, price=price)
+
+    def get_patients(self):
+        return self.doktor_service.patient_repository.get_petients()
+
+    def get_patient(self, id: int):
+        return self.doktor_service.patient_repository.get_petient(id=id)
+
+    def get_obj(self, table_name: str):
+        return self.doktor_service.patient_repository.get_objs(table_name=table_name)
