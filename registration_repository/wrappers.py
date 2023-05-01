@@ -47,6 +47,10 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
         return [context.create_history(treatment_history=treatment_history_) for treatment_history_ in
                 treatment_history]
 
+    @router.get('/get_history', description='Bemorning kasallik tashxislarini ko\'rish')
+    async def get_history(treatmentteeth_id: int, context: RegisterServiceContext = Depends(context_)):
+        return context.get_history(treatmentteeth_id=treatmentteeth_id)
+
     @router.post('/create_obj',
                  description="[Fillings, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")
     async def create_obj(create_obj: Create_Object, context: RegisterServiceContext = Depends(context_)):
@@ -87,5 +91,9 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
     @router.get('/get_queue', description="navbatni ko'rish")
     async def get_queue(doctor_id: int, context: RegisterServiceContext = Depends(context_)):
         return context.get_queue(doctor_id=doctor_id)
+
+    @router.delete('/delete_queue')
+    async def delete_queue(patient_id: int, context: RegisterServiceContext = Depends(context_)):
+        return context.delete_queue(patient_id=patient_id)
 
     return router

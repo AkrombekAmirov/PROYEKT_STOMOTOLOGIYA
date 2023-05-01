@@ -46,7 +46,7 @@ class PatientRepository:
         session = Session(bind=self.engine)
         result = session.query(TreatmentTeeth).filter_by(**kwargs).first()
         session.close()
-        return TreatmentTeeth.from_orm(result).id
+        return result
 
     def get_treatments(self, patient_id: int):
         session = Session(bind=self.engine)
@@ -94,6 +94,10 @@ class PatientRepository:
     def get_objs(self, table_name: str):
         session = Session(bind=self.engine)
         if table_name == 'DentalComplaints': table_name = DentalComplaints
+        if table_name == 'Treatments': table_name = Treatments
+        if table_name == 'Fillings': table_name = Fillings
+        if table_name == 'CleaningAgents': table_name = CleaningAgents
+        if table_name == 'Extractions': table_name = Extractions
         results = [result for result in session.query(table_name).all()]
         session.close()
         return results
@@ -108,9 +112,9 @@ class PatientRepository:
 
     def gets_history(self, **kwargs):
         session = Session(bind=self.engine)
-        result = session.query(TreatmentHistory).filter_by(**kwargs).all()
+        results = [TreatmentHistory.from_orm(result) for result in session.query(TreatmentHistory).filter_by(**kwargs).all()]
         session.close()
-        return TreatmentHistory.from_orm(result)
+        return results
 
     def get_history(self, id):
         session = Session(bind=self.engine)

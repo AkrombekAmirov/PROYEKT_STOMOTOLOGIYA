@@ -73,6 +73,9 @@ class RegisterServiceContext:
                                                                        extraction_id=treatment_history.extraction_id,
                                                                        created_by=self.register.id)
 
+    def get_history(self, treatmentteeth_id: int):
+        return self.register_service.patient_repository.gets_history(treatmentteeth=treatmentteeth_id)
+
     def create_file(self, patient_id: int, image: bytes, content_type: str):
         uuid = str(uuid4())
         self.register_service.file_repository.create_file_chunk(image=image, file_uuid=uuid)
@@ -101,3 +104,6 @@ class RegisterServiceContext:
 
     def get_queue(self, doctor_id: int):
         return self.register_service.patient_repository.get_queue(doctor_id=doctor_id)
+
+    def delete_queue(self, patient_id: int):
+        return self.register_service.patient_repository.remove_queue(id=patient_id)
