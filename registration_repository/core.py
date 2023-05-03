@@ -1,6 +1,7 @@
 from patient_repository import PatientRepository
 from fastapi.responses import StreamingResponse
 from user_repository import UserRepository
+from fastapi import HTTPException, status
 from file_repository import FileService
 from .models import TreatmentHistory
 from auth_service import AuthService
@@ -45,11 +46,11 @@ class RegisterServiceContext:
         return self.register_service.patient_repository.get_petient(id=id)
 
     def create_treatmentteeth(self, patient_id: int, attached_id: int, description: str):
-        # if self.register_service.patient_repository.get_treatment(patient_id=patient_id,
-        #                                                           date_of_treatment=datetime.now().strftime(
-        #                                                               "%Y-%m-%d")):
-        #     raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-        #                         detail="treatment conflict: bir kunga bitta ochish mumkin!")
+        if self.register_service.patient_repository.get_treatment(patient_id=patient_id,
+                                                                  date_of_treatment=datetime.now().strftime(
+                                                                      "%Y-%m-%d")):
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                detail="treatment conflict: bir kunga bitta ochish mumkin!")
         return self.register_service.patient_repository.create_treatmentteeth(patient_id=patient_id,
                                                                               attached_id=attached_id,
                                                                               description=description,
@@ -67,10 +68,6 @@ class RegisterServiceContext:
         return self.register_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth,
                                                                        tooth_id=treatment_history.tooth_id,
                                                                        complaint_id=treatment_history.complaint_id,
-                                                                       treatment_id=treatment_history.treatment_id,
-                                                                       filling_id=treatment_history.filling_id,
-                                                                       cleaning_agent_id=treatment_history.cleaning_agent_id,
-                                                                       extraction_id=treatment_history.extraction_id,
                                                                        created_by=self.register.id)
 
     def get_history(self, treatmentteeth_id: int):

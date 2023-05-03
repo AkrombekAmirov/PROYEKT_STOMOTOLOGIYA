@@ -20,14 +20,15 @@ def AuthorizedDoktorServiceRouter(authorized_doktor_service: AuthorizedDoktorSer
         return context.get_history(treatmentteeth_id=treatmentteeth_id)
 
     @router.put('/update_history')
-    async def update_history(treatmentteeth_id: int, history: UpdateTreatmentHistory, context: DoktorServiceContext = Depends(context_)):
-        return context.update_history(treatmentteeth_id=treatmentteeth_id,history=history)
+    async def update_history(treatmentteeth_id: int, history: UpdateTreatmentHistory,
+                             context: DoktorServiceContext = Depends(context_)):
+        return context.update_history(treatmentteeth_id=treatmentteeth_id, history=history)
 
     @router.get('/get_treatment')
     async def get_treatment(patient_id: int, context: DoktorServiceContext = Depends(context_)):
         return context.get_treatment(patient_id=patient_id)
 
-    @router.get('/get_treatment_day')
+    @router.get('/get_treatment_day', description='Bemorning bugungi kasallik tashxisini qaytaradi!')
     async def get_treatment_(patient_id: int, context: DoktorServiceContext = Depends(context_)):
         return context.get_treatment_(patient_id=patient_id)
 
@@ -38,7 +39,9 @@ def AuthorizedDoktorServiceRouter(authorized_doktor_service: AuthorizedDoktorSer
     @router.get('/get_patient')
     async def get_patient(id: int, context: DoktorServiceContext = Depends(context_)):
         return context.get_patient(id=id)
-    @router.get('/get_obj', description="[Fillings, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")
+
+    @router.get('/get_obj',
+                description="[Fillings, Treatments, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")
     async def get_obj(table_name: str, context: DoktorServiceContext = Depends(context_)):
         return context.get_obj(table_name=table_name)
 

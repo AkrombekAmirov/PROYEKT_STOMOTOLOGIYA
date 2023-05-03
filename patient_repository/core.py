@@ -13,6 +13,11 @@ class PatientRepository:
 
     def create_petient(self, petient, created_by):
         session = Session(bind=self.engine)
+        if session.query(Patients).filter_by(first_name=petient.first_name, last_name=petient.last_name,
+                          address=petient.address, phone_number=petient.phone_number).first():
+            return HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                 detail="Avval bu bemor ruyhatga olingan!")
+
         result = Patients(created_by=created_by, first_name=petient.first_name, last_name=petient.last_name,
                           address=petient.address, phone_number=petient.phone_number)
         session.add(result)
@@ -122,10 +127,10 @@ class PatientRepository:
         session.close()
         return TreatmentHistory.from_orm(result)
 
-    def update_history(self, id: int, **kwargs):
+    def update_history(self, treatmentteeth_id: int, **kwargs):
         session = Session(bind=self.engine)
         for key, value in kwargs.items():
-            setattr(session.query(TreatmentHistory).filter_by(id=id).first(), key, value)
+            setattr(session.query(TreatmentHistory).filter_by(treatmentteeth=treatmentteeth_id).first(), key, value)
         session.commit()
         session.close()
         return True
@@ -150,7 +155,7 @@ class PatientRepository:
 
     def remove_queue(self, id):
         session = Session(bind=self.engine)
-        session.query(QueuePatient).filter_by(id=id).delete()
+        session.query(QueuePatient).filter_by(patient_id=id).delete()
         session.commit()
         session.close()
         return True
