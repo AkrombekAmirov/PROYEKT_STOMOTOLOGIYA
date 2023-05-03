@@ -42,10 +42,9 @@ def AuthorizedRegisterServiceRouter(authorized_register_service: AuthorizedRegis
         return context.get_treatments(patient_id=patient_id)
 
     @router.post('/create_history', description='Bemorga kasallik tashxislarini yozish')
-    async def create_history(treatment_history: List[TreatmentHistory],
+    async def create_history(treatment_history: TreatmentHistory,
                              context: RegisterServiceContext = Depends(context_)):
-        return [context.create_history(treatment_history=treatment_history_) for treatment_history_ in
-                treatment_history]
+        return context.create_history(treatment_history=treatment_history)
 
     @router.get('/get_history', description='Bemorning kasallik tashxislarini ko\'rish')
     async def get_history(treatmentteeth_id: int, context: RegisterServiceContext = Depends(context_)):
