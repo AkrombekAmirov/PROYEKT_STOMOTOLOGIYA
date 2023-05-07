@@ -22,10 +22,10 @@ class TreatmentHistory(BaseModel):
 class UpdateTreatmentHistory(BaseModel):
     tooth_id: List[int] = []
     complaint_id: List[str] = []
-    treatment_id: str
-    filling_id: str
-    cleaning_agent_id: str
-    extraction_id: str
+    treatment_id: List[str] = []
+    filling_id: List[str] = []
+    cleaning_agent_id: List[str] = []
+    extraction_id: List[str] = []
 
 
 class Create_Object(BaseModel):

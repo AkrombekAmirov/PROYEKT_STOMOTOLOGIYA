@@ -60,10 +60,10 @@ class TreatmentHistory(SQLModel, table=True):
     treatmentteeth: int
     tooth_id: List[int] = Field(sa_column=Column(postgresql.ARRAY(Integer)))
     complaint_id: List[str] = Field(sa_column=Column(postgresql.ARRAY(String)))
-    treatment_id: str = Field(default=None)
-    filling_id: str = Field(default=None)
-    cleaning_agent_id: str = Field(default=None)
-    extraction_id: str = Field(default=None)
+    treatment_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    filling_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    cleaning_agent_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    extraction_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
     created_by: int
     date_of_creation: str = Field(default=datetime.now().strftime("%Y-%m-%d"))
 

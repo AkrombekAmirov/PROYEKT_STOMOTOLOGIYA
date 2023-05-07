@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from os import environ
 
-load_dotenv('.env')
+load_dotenv()
 
 algorithm = environ.get("ALGORITHM")
 secret_key = environ.get("SECRET_KEY")
