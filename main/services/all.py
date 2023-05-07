@@ -11,5 +11,6 @@ token_manager = TokenManager(secret=secret_key, algorithm=algorithm, expire_time
 auth_service = AuthService(user_repository=user_repository, token_manager=token_manager)
 register_service = RegisterService(patient_repository=patient_repository, user_repository=user_repository,
                                    file_repository=file_repository)
-doctor_service = DoktorService(patient_repository=patient_repository, user_repository=user_repository)
+doctor_service = DoktorService(patient_repository=patient_repository, user_repository=user_repository,
+                               file_repository=file_repository)
 admin_service = AdminService(user_repository=user_repository)
