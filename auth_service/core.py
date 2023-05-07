@@ -1,4 +1,3 @@
-from key_value_cache.domain import KeyValueCache
 from user_repository import UserRepository
 from string import ascii_uppercase, digits
 from random import choices
