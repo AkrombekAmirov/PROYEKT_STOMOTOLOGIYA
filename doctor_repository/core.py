@@ -1,9 +1,10 @@
-from registration_repository.models import TreatmentHistory, UpdateTreatmentHistory
+from registration_repository.models import UpdateTreatmentHistory
 from patient_repository import PatientRepository
 from fastapi.responses import StreamingResponse
 from user_repository import UserRepository
 from fastapi import HTTPException, status
 from file_repository import FileService
+from .models import TreatmentHistory
 from auth_service import AuthService
 from datetime import datetime
 from gzip import decompress
@@ -37,14 +38,14 @@ class DoktorServiceContext:
         self.doktor = doktor
 
     def create_history(self, treatment_history: TreatmentHistory):
-        self.doktor_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth,
-                                                              tooth_id=treatment_history.tooth_id,
-                                                              complaint_id=treatment_history.complaint_id,
-                                                              treatment_id=treatment_history.treatment_id,
-                                                              filling_id=treatment_history.filling_id,
-                                                              cleaning_agent_id=treatment_history.cleaning_agent_id,
-                                                              extraction_id=treatment_history.extraction_id,
-                                                              created_by=self.doktor.id)
+        return self.doktor_service.patient_repository.create_history(treatmentteeth=treatment_history.treatmentteeth,
+                                                                     tooth_id=treatment_history.tooth_id,
+                                                                     complaint_id=treatment_history.complaint_id,
+                                                                     treatment_id=treatment_history.treatment_id,
+                                                                     filling_id=treatment_history.filling_id,
+                                                                     cleaning_agent_id=treatment_history.cleaning_agent_id,
+                                                                     extraction_id=treatment_history.extraction_id,
+                                                                     created_by=self.doktor.id)
 
     def get_history(self, treatmentteeth_id: int):
         return self.doktor_service.patient_repository.gets_history(treatmentteeth=treatmentteeth_id)

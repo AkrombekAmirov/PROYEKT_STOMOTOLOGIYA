@@ -1,7 +1,8 @@
-from registration_repository.models import TreatmentHistory, UpdateTreatmentHistory
+from registration_repository.models import UpdateTreatmentHistory
 from fastapi import APIRouter, UploadFile, HTTPException, status
 from .core import AuthorizedDoktorService, DoktorServiceContext
 from fastapi.params import Depends, Header
+from .models import TreatmentHistory
 from gzip import compress
 from typing import List
 
