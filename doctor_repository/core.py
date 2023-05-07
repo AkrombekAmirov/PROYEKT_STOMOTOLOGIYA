@@ -1,15 +1,21 @@
 from registration_repository.models import TreatmentHistory, UpdateTreatmentHistory
 from patient_repository import PatientRepository
+from fastapi.responses import StreamingResponse
 from user_repository import UserRepository
 from fastapi import HTTPException, status
+from file_repository import FileService
 from auth_service import AuthService
 from datetime import datetime
+from gzip import decompress
+from uuid import uuid4
 
 
 class DoktorService:
-    def __init__(self, patient_repository: PatientRepository, user_repository: UserRepository):
+    def __init__(self, patient_repository: PatientRepository, user_repository: UserRepository,
+                 file_repository: FileService):
         self.patient_repository = patient_repository
         self.user_repository = user_repository
+        self.file_repository = file_repository
 
     def context(self, doktor):
         if doktor.role != 'doctor': raise Exception('incorrect role')
@@ -57,8 +63,8 @@ class DoktorServiceContext:
 
     def get_treatment_(self, patient_id: int):
         id = self.doktor_service.patient_repository.get_treatment(patient_id=patient_id,
-                                                                    date_of_treatment=datetime.now().strftime(
-                                                                        "%Y-%m-%d")).id
+                                                                  date_of_treatment=datetime.now().strftime(
+                                                                      "%Y-%m-%d")).id
         return self.doktor_service.patient_repository.gets_history(treatmentteeth=id), id
 
     def get_treatments(self):
@@ -75,3 +81,20 @@ class DoktorServiceContext:
 
     def get_obj(self, table_name: str):
         return self.doktor_service.patient_repository.get_objs(table_name=table_name)
+
+    def create_file(self, patient_id: int, image: bytes, content_type: str):
+        uuid = str(uuid4())
+        self.doktor_service.file_repository.create_file_chunk(image=image, file_uuid=uuid)
+        return self.doktor_service.file_repository.create_file(patient_id=patient_id, content_type=content_type,
+                                                               file_id=uuid)
+
+    def get_file(self, file_uuid: str):
+        def iterfile():
+            yield decompress(b"".join(
+                [element.chunk for element in self.doktor_service.file_repository.get_file(file_id=file_uuid)]))
+
+        return StreamingResponse(iterfile(), media_type=self.doktor_service.file_repository.get_file_(
+            file_uuid=file_uuid).content_type)
+
+    def get_files(self, patient_id: int):
+        return self.doktor_service.file_repository.get_files(patient_id=patient_id)

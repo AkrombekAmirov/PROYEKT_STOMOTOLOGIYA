@@ -81,8 +81,11 @@ class RegisterServiceContext:
 
     def get_file(self, file_uuid: str):
         def iterfile():
-            yield decompress(b"".join([element.chunk for element in self.register_service.file_repository.get_file(file_id=file_uuid)]))
-        return StreamingResponse(iterfile(), media_type=self.register_service.file_repository.get_file_(file_uuid=file_uuid).content_type)
+            yield decompress(b"".join(
+                [element.chunk for element in self.register_service.file_repository.get_file(file_id=file_uuid)]))
+
+        return StreamingResponse(iterfile(), media_type=self.register_service.file_repository.get_file_(
+            file_uuid=file_uuid).content_type)
 
     def get_files(self, patient_id: int):
         return self.register_service.file_repository.get_files(patient_id=patient_id)
