@@ -12,16 +12,14 @@ def password_policy(password):
 
 class AuthService:
     def __init__(self,
-                 token_cache: KeyValueCache,
                  user_repository: UserRepository,
                  token_manager: TokenManager):
-        self.token_cache = token_cache
         self.user_repository = user_repository
         self.token_manager = token_manager
 
     def generate_token(self) -> str:
         token = ''.join(choices(ascii_uppercase + digits, k=10))
-        self.token_cache.set(token, None)
+        # self.token_cache.set(token, None)
         return token
 
     def exists_token(self, token) -> bool:

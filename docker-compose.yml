@@ -1,46 +1,77 @@
-version: '3'
-
-services:
-  myapp:
-    build: .
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - "8000:8000"
-    environment:
-      TOKEN_CACHE_URL: redis://localhost:6379/0
-      ATTEMPT_CACHE_URL: redis://localhost:6379/1
-      DATABASE_URL: postgresql+psycopg2://admin_user:password@db:5432/symptomatologic
-    networks:
-      - mynet
-#  redis:
-#    image: redis:latest
+#version: '3'
+#
+#services:
+#  myapp:
+#    build: .
+#    depends_on:
+#      - redis
+#      - postgres
 #    ports:
-#      - "6379:6379"
-#    volumes:
-#      - redisdata:/data
-##      - ./redis.conf:/usr/local/etc/redis/redis.conf
-##    command: redis-server /usr/local/etc/redis/redis.conf
+#      - "8000:8000"
+#    environment:
+#      TOKEN_CACHE_URL: redis://localhost:6379/0
+#      ATTEMPT_CACHE_URL: redis://localhost:6379/1
+#      DATABASE_URL: postgresql+psycopg2://admin_user:password@db:5432/symptomatologic
 #    networks:
 #      - mynet
+##  redis:
+##    image: redis:latest
+##    ports:
+##      - "6379:6379"
+##    volumes:
+##      - redisdata:/data
+###      - ./redis.conf:/usr/local/etc/redis/redis.conf
+###    command: redis-server /usr/local/etc/redis/redis.conf
+##    networks:
+##      - mynet
+#  db:
+#    image: postgres:latest
+#    environment:
+#      POSTGRES_USER: admin_user
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: symptomatologic
+##    volumes:
+##      - dbdata:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#    networks:
+#      - mynet
+#
+#volumes:
+#  dbdata:
+#  redisdata:
+#
+#networks:
+#  mynet:
+#    driver: bridge
+version: '3.9'
+
+networks:
+  app_network:
+    driver: bridge
+
+services:
   db:
-    image: postgres:latest
+    image: postgres
+    restart: always
     environment:
-      POSTGRES_USER: admin_user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: symptomatologic
-#    volumes:
-#      - dbdata:/var/lib/postgresql/data
+      POSTGRES_USER: admin_user
+      POSTGRES_DB: stockscreener
     ports:
       - "5432:5432"
     networks:
-      - mynet
+      - app_network
 
-volumes:
-  dbdata:
-  redisdata:
+  app:
+    build: .
+    command: ["python", "-m", "uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      SQLALCHEMY_DATABASE_URL: postgresql+psycopg2://admin_user:password@db:5432/symptomatologic
+    depends_on:
+      - db
+    networks:
+      - app_network
 
-networks:
-  mynet:
-    driver: bridge
