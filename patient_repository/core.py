@@ -10,11 +10,18 @@ queue = 1
 class PatientRepository:
     def __init__(self, engine):
         self.engine = engine
+        self.table_mapping = {
+            'Treatments': Treatments,
+            'Fillings': Fillings,
+            'CleaningAgents': CleaningAgents,
+            'Extractions': Extractions,
+            'DentalComplaints': DentalComplaints
+        }
 
     def create_petient(self, petient, created_by):
         session = Session(bind=self.engine)
         if session.query(Patients).filter_by(first_name=petient.first_name, last_name=petient.last_name,
-                          address=petient.address, phone_number=petient.phone_number).first():
+                                             address=petient.address, phone_number=petient.phone_number).first():
             return HTTPException(status_code=status.HTTP_409_CONFLICT,
                                  detail="Avval bu bemor ruyhatga olingan!")
 
@@ -83,14 +90,8 @@ class PatientRepository:
         return DentalComplaints.from_orm(result)
 
     def create_obj(self, create_obj):
-        global table_name
         session = Session(bind=self.engine)
-        if create_obj.table_name == 'Treatments': table_name = Treatments
-        if create_obj.table_name == 'Fillings': table_name = Fillings
-        if create_obj.table_name == 'CleaningAgents': table_name = CleaningAgents
-        if create_obj.table_name == 'Extractions': table_name = Extractions
-        if create_obj.table_name == 'DentalComplaints': table_name = DentalComplaints
-        result = table_name(name=create_obj.name, price=create_obj.price)
+        result = self.table_mapping.get(create_obj.table_name)(name=create_obj.name, price=create_obj.price)
         session.add(result)
         session.commit()
         session.refresh(result)
@@ -98,16 +99,18 @@ class PatientRepository:
 
     def get_objs(self, table_name: str):
         session = Session(bind=self.engine)
-        if table_name == 'DentalComplaints': table_name = DentalComplaints
-        if table_name == 'Treatments': table_name = Treatments
-        if table_name == 'Fillings': table_name = Fillings
-        if table_name == 'CleaningAgents': table_name = CleaningAgents
-        if table_name == 'Extractions': table_name = Extractions
-        results = [result for result in session.query(table_name).all()]
+        results = [result for result in session.query(self.table_mapping.get(table_name)).all()]
         session.close()
         return results
 
-    def create_history(self, **kwargs):
+    def update_objs(self, update_obj):
+        session = Session(bind=self.engine)
+        session.query(self.table_mapping.get(update_obj.table_name)).filter_by(id=update_obj.id).update({"name": update_obj.name, "price": update_obj.price})
+        session.commit()
+        session.close()
+        return True
+
+    def create_history(self, **kwargs) -> TreatmentHistory:
         session = Session(bind=self.engine)
         result = TreatmentHistory(**kwargs)
         session.add(result)
@@ -117,7 +120,8 @@ class PatientRepository:
 
     def gets_history(self, **kwargs):
         session = Session(bind=self.engine)
-        results = [TreatmentHistory.from_orm(result) for result in session.query(TreatmentHistory).filter_by(**kwargs).all()]
+        results = [TreatmentHistory.from_orm(result) for result in
+                   session.query(TreatmentHistory).filter_by(**kwargs).all()]
         session.close()
         return results
 

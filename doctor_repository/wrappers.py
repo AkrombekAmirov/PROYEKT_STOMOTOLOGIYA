@@ -1,8 +1,8 @@
 from registration_repository.models import UpdateTreatmentHistory
 from fastapi import APIRouter, UploadFile, HTTPException, status
 from .core import AuthorizedDoktorService, DoktorServiceContext
+from .models import TreatmentHistory, Update_Price
 from fastapi.params import Depends, Header
-from .models import TreatmentHistory
 from gzip import compress
 from typing import List
 
@@ -69,5 +69,9 @@ def AuthorizedDoktorServiceRouter(authorized_doktor_service: AuthorizedDoktorSer
     @router.get('/get_files', description=' bemorni barcha filelar ruyhatini ko\'rish')
     async def get_files(patient_id: int, context: DoktorServiceContext = Depends(context_)):
         return context.get_files(patient_id=patient_id)
+
+    @router.put('/update_price')
+    async def update_price(info: Update_Price, context: DoktorServiceContext = Depends(context_)):
+        return context.update_treatment_teeth_one(info=info)
 
     return router

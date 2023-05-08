@@ -10,3 +10,8 @@ class TreatmentHistory(BaseModel):
     filling_id: List[str] = []
     cleaning_agent_id: List[str] = []
     extraction_id: List[str] = []
+
+
+class Update_Price(BaseModel):
+    treatmentteeth_id: int
+    price: str
