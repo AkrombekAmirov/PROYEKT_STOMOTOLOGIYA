@@ -13,4 +13,4 @@ register_service = RegisterService(patient_repository=patient_repository, user_r
                                    file_repository=file_repository)
 doctor_service = DoktorService(patient_repository=patient_repository, user_repository=user_repository,
                                file_repository=file_repository)
-admin_service = AdminService(user_repository=user_repository)
+admin_service = AdminService(user_repository=user_repository, patient_repository=patient_repository)

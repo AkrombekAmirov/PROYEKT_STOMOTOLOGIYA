@@ -32,3 +32,10 @@ class Create_Object(BaseModel):
     table_name: str
     name: str
     price: str
+
+
+class Update_Object(BaseModel):
+    id: int
+    table_name: str
+    name: str
+    price: str

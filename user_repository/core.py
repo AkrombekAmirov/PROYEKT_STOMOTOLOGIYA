@@ -1,4 +1,5 @@
 from sqlalchemy.orm.session import Session
+from fastapi import HTTPException, status
 from .models import User
 
 
@@ -20,6 +21,9 @@ class UserRepository:
 
     def create_user(self, user: User):
         session = Session(bind=self.engine)
+        if session.query(User).filter_by(username=user.username).exists():
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                detail="Ushbu username bilan ruyhtadan o'tgan hodim mavjud!!!")
         user_ = User(**user.dict(exclude={'id'}))
         session.add(user_)
         session.commit()
@@ -50,6 +54,13 @@ class UserRepository:
         result = [User.from_orm(user) for user in session.query(User).filter_by(**kwargs).all()]
         session.close()
         return result
+
+    def update_user(self, user_id: int, user):
+        session = Session(bind=self.engine)
+        session.query(User).filter_by(id=user_id).update(user.dict())
+        session.commit()
+        session.close()
+        return True
 
     def delete_user(self, user_id):
         session = Session(bind=self.engine)
