@@ -114,6 +114,9 @@ class PatientRepository:
         session.close()
         return True
 
+
+
+
     def create_history(self, **kwargs) -> TreatmentHistory:
         session = Session(bind=self.engine)
         result = TreatmentHistory(**kwargs)
