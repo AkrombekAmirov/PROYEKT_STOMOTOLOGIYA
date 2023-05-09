@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, ForeignKey, ARRAY, Integer, Column, String
 from sqlalchemy.dialects import postgresql
+from pydantic import BaseModel
 from datetime import datetime
 from typing import List
 
@@ -61,9 +62,13 @@ class TreatmentHistory(SQLModel, table=True):
     tooth_id: List[int] = Field(sa_column=Column(postgresql.ARRAY(Integer)))
     complaint_id: List[str] = Field(sa_column=Column(postgresql.ARRAY(String)))
     treatment_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    treatment_num: int = Field(default=None)
     filling_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    filling_num: int = Field(default=None)
     cleaning_agent_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    cleaning_agent: int = Field(default=None)
     extraction_id: List[str] = Field(default=None, sa_column=Column(postgresql.ARRAY(String)))
+    extraction_num: int = Field(default=None)
     created_by: int
     date_of_creation: str = Field(default=datetime.now().strftime("%Y-%m-%d"))
 
@@ -73,3 +78,8 @@ class QueuePatient(SQLModel, table=True):
     queue_number: int = Field(default=0)
     patient_id: int = Field(nullable=True)
     doctor_id: int
+
+#
+# class TreatmentInfo(BaseModel):
+#     treatment_teeth: Treatments
+#     treatment_history: List[]
