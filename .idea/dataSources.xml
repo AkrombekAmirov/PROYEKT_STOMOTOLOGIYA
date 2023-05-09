@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/BGDV2devdb</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="symptomatologic@localhost" uuid="d1b9526e-29d5-46e3-8a65-f2d35c9997c8">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/symptomatologic</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

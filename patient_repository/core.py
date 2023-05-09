@@ -68,9 +68,12 @@ class PatientRepository:
 
     def get_treatment_(self, **kwargs):
         session = Session(bind=self.engine)
-        result = session.query(TreatmentTeeth).filter_by(**kwargs).all()
+        results = [{"treatmentteeth": treatment_teeth,
+                    "treatment_history": session.query(TreatmentHistory).filter_by(
+                        treatmentteeth=treatment_teeth.id).first()} for treatment_teeth
+                   in session.query(TreatmentTeeth).filter_by(**kwargs).all()]
         session.close()
-        return result
+        return sorted(results, key=lambda x: x["treatmentteeth"].date_of_treatment, reverse=False)
 
     def update_TreatmentTeeth(self, id: int, **kwargs):
         session = Session(bind=self.engine)
@@ -105,10 +108,14 @@ class PatientRepository:
 
     def update_objs(self, update_obj):
         session = Session(bind=self.engine)
-        session.query(self.table_mapping.get(update_obj.table_name)).filter_by(id=update_obj.id).update({"name": update_obj.name, "price": update_obj.price})
+        session.query(self.table_mapping.get(update_obj.table_name)).filter_by(id=update_obj.id).update(
+            {"name": update_obj.name, "price": update_obj.price})
         session.commit()
         session.close()
         return True
+
+
+
 
     def create_history(self, **kwargs) -> TreatmentHistory:
         session = Session(bind=self.engine)
