@@ -42,13 +42,9 @@ class DoktorServiceContext:
                                                                      tooth_id=treatment_history.tooth_id,
                                                                      complaint_id=treatment_history.complaint_id,
                                                                      treatment_id=treatment_history.treatment_id,
-                                                                     treatment_num=treatment_history.treatment_num,
                                                                      filling_id=treatment_history.filling_id,
-                                                                     filling_num=treatment_history.filling_num,
                                                                      cleaning_agent_id=treatment_history.cleaning_agent_id,
-                                                                     cleaning_agent=treatment_history.cleaning_agent,
                                                                      extraction_id=treatment_history.extraction_id,
-                                                                     extraction_num=treatment_history.extraction_num,
                                                                      created_by=self.doktor.id)
 
     def get_history(self, treatmentteeth_id: int):
@@ -59,13 +55,9 @@ class DoktorServiceContext:
                                                                      tooth_id=history.tooth_id,
                                                                      complaint_id=history.complaint_id,
                                                                      treatment_id=history.treatment_id,
-                                                                     treatment_num=history.treatment_num,
                                                                      filling_id=history.filling_id,
-                                                                     filling_num=history.filling_num,
                                                                      cleaning_agent_id=history.cleaning_agent_id,
-                                                                     cleaning_agent=history.cleaning_agent,
-                                                                     extraction_id=history.extraction_id,
-                                                                     extraction_num=history.extraction_num)
+                                                                     extraction_id=history.extraction_id)
 
     def get_treatment(self, patient_id: int):
         return self.doktor_service.patient_repository.get_treatment_(patient_id=patient_id)
