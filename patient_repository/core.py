@@ -2,7 +2,7 @@ from sqlalchemy.sql import func
 from fastapi import HTTPException, status
 from sqlalchemy.orm.session import Session
 from .models import Patients, TreatmentTeeth, TreatmentHistory, DentalComplaints, Treatments, \
-    Fillings, CleaningAgents, Extractions, QueuePatient
+    Fillings, CleaningAgents, Extractions, QueuePatient, TreatmentHistoryDetails, Treatment
 
 queue = 1
 
@@ -68,10 +68,35 @@ class PatientRepository:
 
     def get_treatment_(self, **kwargs):
         session = Session(bind=self.engine)
-        results = [{"treatmentteeth": treatment_teeth,
-                    "treatment_history": session.query(TreatmentHistory).filter_by(
-                        treatmentteeth=treatment_teeth.id).first()} for treatment_teeth
-                   in session.query(TreatmentTeeth).filter_by(**kwargs).all()]
+        results = []
+        for treatmentteeth in session.query(TreatmentTeeth).filter_by(**kwargs).all():
+            for treatment_history in session.query(TreatmentHistory).filter_by(treatmentteeth=treatmentteeth.id).all():
+                complaints = [DentalComplaints(id=i.id, name=i.name, price=i.price) for i in
+                              session.query(DentalComplaints).filter(
+                                  DentalComplaints.id.in_(treatment_history.complaint_id)).all()]
+                print(treatment_history.filling_id)
+                fillings = [Treatment(id=i.id, name=i.name, price=i.price) for i in
+                            session.query(Fillings).filter(Fillings.id.in_(treatment_history.filling_id)).all()]
+                cleaning_agents = [Treatment(id=i.id, name=i.name, price=i.price) for i in
+                                   session.query(CleaningAgents).filter(
+                                       CleaningAgents.id.in_(treatment_history.cleaning_agent_id)).all()]
+                extractions = [Treatment(id=i.id, name=i.name, price=i.price) for i in
+                               session.query(Extractions).filter(
+                                   Extractions.id.in_(treatment_history.extraction_id)).all()]
+                treatment_id = [Treatment(id=i.id, name=i.name, price=i.price) for i in
+                                session.query(Treatments).filter(
+                                    Treatments.id.in_(treatment_history.treatment_id)).all()]
+                treatmentteeth_id = treatment_history.treatmentteeth
+                tooth_id = treatment_history.tooth_id
+                created_by = treatment_history.created_by
+                date_of_creation = treatment_history.date_of_creation
+                t = TreatmentHistoryDetails(treatmentteeth=treatment_history.treatmentteeth, tooth_id=tooth_id,
+                                            complaint_id=complaints, treatment_id=treatment_id,
+                                            filling_id=fillings, cleaning_agent_id=cleaning_agents,
+                                            extraction_id=extractions, created_by=created_by,
+                                            date_of_creation=date_of_creation)
+                results.append({"treatmentteeth": treatmentteeth, "treatment_history": t})
+
         session.close()
         return sorted(results, key=lambda x: x["treatmentteeth"].date_of_treatment, reverse=False)
 
@@ -113,9 +138,6 @@ class PatientRepository:
         session.commit()
         session.close()
         return True
-
-
-
 
     def create_history(self, **kwargs) -> TreatmentHistory:
         session = Session(bind=self.engine)
