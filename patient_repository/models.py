@@ -75,7 +75,80 @@ class QueuePatient(SQLModel, table=True):
     patient_id: int = Field(nullable=True)
     doctor_id: int
 
+
+class Treatment(BaseModel):
+    id: int
+    name: str
+    price: str
+
+
+class TreatmentHistoryDetails(BaseModel):
+    treatmentteeth: int
+    tooth_id: list[int]
+    complaint_id: list[Treatment]
+    treatment_id: list[Treatment]
+    filling_id: list[Treatment]
+    cleaning_agent_id: list[Treatment]
+    extraction_id: list[Treatment]
+    created_by: int
+    date_of_creation: str
+
+
+class TreatmentHistory_(BaseModel):
+    treatmentteeth: int
+    date_of_creation: str
+    details: TreatmentHistoryDetails
+    id: int
+    created_by: int
+
+
+class TreatmentTeeth_(BaseModel):
+    id: int
+    date_of_treatment: str
+    patient_id: int
+    description: str
+    attached_id: int
+    price: str
+    doctor_description: str
+    created_by: int
+
 #
 # class TreatmentInfo(BaseModel):
 #     treatment_teeth: Treatments
 #     treatment_history: List[]
+
+# def get_treatment_(self, **kwargs):
+#     session = Session(bind=self.engine)
+#     results = []
+#     treatmentteeth = session.query(TreatmentTeeth).filter_by(**kwargs).first()
+#     if treatmentteeth:
+#         treatment_history = session.query(TreatmentHistory).filter_by(treatmentteeth=treatmentteeth.id).first()
+#         if treatment_history:
+#             complaint_ids = treatment_history.details.complaint_id
+#             complaints = session.query(DentalComplaints).filter(DentalComplaints.id.in_(complaint_ids)).all()
+#             complaint_data = [Complaint(id=c.id, name=c.name, price=c.price) for c in complaints]
+#             filling_ids = treatment_history.details.filling_id
+#             fillings = session.query(Fillings).filter(Fillings.id.in_(filling_ids)).all()
+#             filling_data = [Treatment(id=f.id, name=f.name, price=f.price) for f in fillings]
+#             cleaning_agent_ids = treatment_history.details.cleaning_agent_id
+#             cleaning_agents = session.query(CleaningAgents).filter(CleaningAgents.id.in_(cleaning_agent_ids)).all()
+#             cleaning_agent_data = [Treatment(id=c.id, name=c.name, price=c.price) for c in cleaning_agents]
+#             extraction_ids = treatment_history.details.extraction_id
+#             extractions = session.query(Extractions).filter(Extractions.id.in_(extraction_ids)).all()
+#             extraction_data = [Treatment(id=e.id, name=e.name, price=e.price) for e in extractions]
+#             treatment_data = treatment_history.details.treatment_id
+#             tooth_ids = treatment_history.details.tooth_id
+#             created_by = treatment_history.details.created_by
+#             treatment_history_data = TreatmentHistory(treatmentteeth=treatment_history.treatmentteeth,
+#                                                       date_of_creation=treatment_history.date_of_creation,
+#                                                       details=TreatmentHistoryDetails(tooth_id=tooth_ids,
+#                                                                                       complaint_id=complaint_data,
+#                                                                                       treatment_id=treatment_data,
+#                                                                                       filling_id=filling_data,
+#                                                                                       cleaning_agent_id=cleaning_agent_data,
+#                                                                                       extraction_id=extraction_data,
+#                                                                                       created_by=created_by),
+#                                                       id=treatment_history.id,
+#                                                       created_by=treatment_history.created_by)
+#             results.append({"treatmentteeth": treatmentteeth, "treatment_history": treatment_history_data})
+#     return r
