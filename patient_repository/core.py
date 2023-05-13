@@ -73,20 +73,18 @@ class PatientRepository:
             for treatment_history in session.query(TreatmentHistory).filter_by(treatmentteeth=treatmentteeth.id).all():
                 complaints = [DentalComplaints(id=i.id, name=i.name, price=i.price) for i in
                               session.query(DentalComplaints).filter(
-                                  DentalComplaints.id.in_(treatment_history.complaint_id)).all()]
-                print(treatment_history.filling_id)
+                                  DentalComplaints.id.in_((treatment_history.complaint_id)) if treatment_history.complaint_id is not None else False).all()]
                 fillings = [Treatment(id=i.id, name=i.name, price=i.price) for i in
-                            session.query(Fillings).filter(Fillings.id.in_(treatment_history.filling_id)).all()]
+                            session.query(Fillings).filter(Fillings.id.in_((treatment_history.filling_id)) if treatment_history.filling_id is not None else False).all()]
                 cleaning_agents = [Treatment(id=i.id, name=i.name, price=i.price) for i in
                                    session.query(CleaningAgents).filter(
-                                       CleaningAgents.id.in_(treatment_history.cleaning_agent_id)).all()]
+                                       CleaningAgents.id.in_((treatment_history.cleaning_agent_id)) if treatment_history.cleaning_agent_id is not None else False).all()]
                 extractions = [Treatment(id=i.id, name=i.name, price=i.price) for i in
                                session.query(Extractions).filter(
-                                   Extractions.id.in_(treatment_history.extraction_id)).all()]
+                                   Extractions.id.in_((treatment_history.extraction_id)) if treatment_history.extraction_id is not None else False).all()]
                 treatment_id = [Treatment(id=i.id, name=i.name, price=i.price) for i in
                                 session.query(Treatments).filter(
-                                    Treatments.id.in_(treatment_history.treatment_id)).all()]
-                treatmentteeth_id = treatment_history.treatmentteeth
+                                    Treatments.id.in_((treatment_history.treatment_id)) if treatment_history.treatment_id is not None else False).all()]
                 tooth_id = treatment_history.tooth_id
                 created_by = treatment_history.created_by
                 date_of_creation = treatment_history.date_of_creation
