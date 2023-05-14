@@ -21,7 +21,7 @@ class UserRepository:
 
     def create_user(self, user: User):
         session = Session(bind=self.engine)
-        if session.query(User).filter_by(username=user.username).exists():
+        if session.query(User).filter_by(username=user.username).first():
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail="Ushbu username bilan ruyhtadan o'tgan hodim mavjud!!!")
         user_ = User(**user.dict(exclude={'id'}))
