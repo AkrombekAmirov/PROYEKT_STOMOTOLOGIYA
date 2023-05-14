@@ -31,9 +31,17 @@ def AuthorizedAdminServiceRouter(authorized_admin_service: AuthorizedAdminServic
     async def delete_user(user_id: int, context: AdminServiceContext = Depends(context_)):
         return context.delete_user(id=user_id)
 
+    @router.get('/get_register')
+    async def get_register(context: AdminServiceContext = Depends(context_)):
+        return context.get_register()
+
     @router.get('/get_doctors', description="doctor ruyxatini qaytaradi!")
     async def get_doctors(context: AdminServiceContext = Depends(context_)):
         return context.get_doctors()
+
+    @router.get('/get_admins', description="admin ruyxatini qaytaradi!")
+    async def get_doctors(context: AdminServiceContext = Depends(context_)):
+        return context.get_admin()
 
     @router.post('/create_obj',
                  description="[Fillings, Treatments, CleaningAgents, Extractions, DentalComplaints] Tanlangan xizmatni yaratish!")

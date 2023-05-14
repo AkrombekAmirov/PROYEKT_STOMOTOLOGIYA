@@ -44,8 +44,14 @@ class AdminServiceContext:
     def delete_user(self, id):
         return self.service.user_repository.delete_user(id)
 
+    def get_register(self):
+        return self.service.user_repository.get_doctors(role="register")
+
     def get_doctors(self):
         return self.service.user_repository.get_doctors(role="doctor")
+
+    def get_admin(self):
+        return self.service.user_repository.get_doctors(role="admin")
 
     def create_obj(self, create_obj):
         return self.service.patient_repository.create_obj(create_obj=create_obj)

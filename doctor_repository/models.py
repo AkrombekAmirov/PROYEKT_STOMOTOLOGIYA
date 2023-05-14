@@ -15,3 +15,4 @@ class TreatmentHistory(BaseModel):
 class Update_Price(BaseModel):
     treatmentteeth_id: int
     price: str
+    doctor_description: str

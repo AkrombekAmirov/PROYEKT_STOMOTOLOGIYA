@@ -73,7 +73,7 @@ class DoktorServiceContext:
         return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 
     def update_treatment_teeth_one(self, info):
-        return self.doktor_service.patient_repository.update_TreatmentTeeth(id=info.treatmentteeth_id, price=info.price)
+        return self.doktor_service.patient_repository.update_TreatmentTeeth(id=info.treatmentteeth_id, price=info.price, doctor_description=info.doctor_description)
 
     def get_patients(self):
         return self.doktor_service.patient_repository.get_petients()
