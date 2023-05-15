@@ -63,17 +63,19 @@ class DoktorServiceContext:
         return self.doktor_service.patient_repository.get_treatment_(patient_id=patient_id)
 
     def get_treatment_(self, patient_id: int):
-        return self.doktor_service.patient_repository.gets_history(
-            treatmentteeth=self.doktor_service.patient_repository.get_treatment(patient_id=patient_id,
-                                                                                date_of_treatment=datetime.now().strftime(
-                                                                                    "%Y-%m-%d")).id), self.doktor_service.file_repository.get_files(
+        result = self.doktor_service.patient_repository.get_treatment(patient_id=patient_id,
+                                                                      date_of_treatment=datetime.now().strftime(
+                                                                          "%Y-%m-%d"))
+        return result, self.doktor_service.patient_repository.gets_history(
+            treatmentteeth=result.id), self.doktor_service.file_repository.get_files(
             patient_id=patient_id)
 
     def get_treatments(self):
         return self.doktor_service.patient_repository.get_treatment_(attached_id=self.doktor.id)
 
     def update_treatment_teeth_one(self, info):
-        return self.doktor_service.patient_repository.update_TreatmentTeeth(id=info.treatmentteeth_id, price=info.price, doctor_description=info.doctor_description)
+        return self.doktor_service.patient_repository.update_TreatmentTeeth(id=info.treatmentteeth_id, price=info.price,
+                                                                            doctor_description=info.doctor_description)
 
     def get_patients(self):
         return self.doktor_service.patient_repository.get_petients()
